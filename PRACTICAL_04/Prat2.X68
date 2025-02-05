@@ -1,8 +1,6 @@
 
     ORG    $1000
-START:                  ; first instruction of program
-
-* Put program code here
+START:                
 
     ; Move Health to Memory Location $3000
     MOVE.B  #100, $3000
@@ -26,13 +24,21 @@ START:                  ; first instruction of program
     ;Address Register A1
     LEA     $3000, A1
     
+    ; Hit by NPC
+    ;Non Player Character
+    SUB.B   #20, (A1)
+    
+    ;Pickup Health Found
+    ADD.B   #10, (A1)
+    
     ; 
     
-    SIMHALT             ; halt simulator
+    SIMHALT            
 
-* Put variables and constants here
 
-    END    START        ; last line of source
+
+    END    START        
+
 
 *~Font name~Courier New~
 *~Font size~10~
