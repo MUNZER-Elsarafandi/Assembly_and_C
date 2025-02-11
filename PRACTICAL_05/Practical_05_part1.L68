@@ -1,0 +1,44 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 11/02/2025 10:54:53
+
+00000000                             1  
+00001000                             2      ORG    $1000
+00001000                             3  START:                  ; first instruction of program
+00001000                             4  
+00001000                             5  * Put program code here
+00001000                             6  
+00001000                             7  INITIALISE:
+00001000  103C 0003                  8      MOVE.B #3, D0
+00001004  123C 0000                  9      MOVE.B #0, D1
+00001008                            10      
+00001008                            11  GAME_LOOP:
+00001008  B03C 0001                 12      CMP.B #1, D0
+0000100C  6600 0006                 13      BNE GAME_POINTS
+00001010  6700 000A                 14      BEQ GAME_OVER
+00001014                            15  
+00001014                            16  GAME_POINTS
+00001014  0601 000A                 17      ADD.B   #10, D1
+00001018  5300                      18      SUB.B   #1, D0
+0000101A  60EC                      19      BRA     GAME_LOOP
+0000101C                            20  
+0000101C                            21  GAME_OVER 
+0000101C                            22  
+0000101C  FFFF FFFF                 23      SIMHALT             ; halt simulator
+00001020                            24  
+00001020                            25  * Put variables and constants here
+00001020                            26  
+00001020                            27      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+GAME_LOOP           1008
+GAME_OVER           101C
+GAME_POINTS         1014
+INITIALISE          1000
+START               1000
