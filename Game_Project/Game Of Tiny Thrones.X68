@@ -1,3 +1,7 @@
+*------------------------
+* NAME - MUNZER ELSARAFANDI
+* ID - C00281934
+* DATE - 28/02/2025
     ORG    $1000
     
 DATA_SECTION:
@@ -20,45 +24,45 @@ START:
     MOVE.B #1,$2000
     
 GAME_LOOP:
-    ADD.W  #1,TURN_COUNT
+    ADD.W  #1,TURN_COUNT ; add new turn each time gameloop excutig again
     BSR    DISPLAY_STATS
     
-    MOVE.W TURN_COUNT,D0
+    MOVE.W TURN_COUNT,D0   ;if player got to 50 turns without losing player wins
     CMP.W  #50,D0
     BEQ    WIN_GAME
     
-    MOVE.W HAPPINESS,D0
+    MOVE.W HAPPINESS,D0  ;if happiness 0 you lose 
     CMP.W  #0,D0
     BLE    LOSE_GAME
     
-    MOVE.W FOOD,D0
+    MOVE.W FOOD,D0   ;if food 0 you lose 
     CMP.W  #0,D0
     BLE    LOSE_GAME
     
-    MOVE.W GOLD,D0
+    MOVE.W GOLD,D0 ;if gold 0 you lose 
     CMP.W  #0,D0
     BLE    LOSE_GAME
     
-    BSR    RANDOM_EVENT
+    BSR    RANDOM_EVENT   ; random events will pops up randomly 
     
     LEA    PROMPT_MSG,A1
     BSR    PRINT_STRING
     BSR    GET_INPUT
     
-    CMP.B  #'1',D0
+    CMP.B  #'1',D0              ; if player inputs 1 it will compare it to the actaul program and then EXPAND_KINGDOM section will be excuted
     BEQ    EXPAND_KINGDOM
-    CMP.B  #'2',D0
+    CMP.B  #'2',D0              ; if player inputs 2 it will compare it to the actaul program and then  COLLECT_TAXES section will be excuted
     BEQ    COLLECT_TAXES
-    CMP.B  #'3',D0
+    CMP.B  #'3',D0          ;if player inputs 3 it will compare it to the actaul program and then  TRAIN_ARMY section will be excuted
     BEQ    TRAIN_ARMY
-    CMP.B  #'4',D0
+    CMP.B  #'4',D0           ;if player inputs 4 it will compare it to the actaul program and then  DECLARE_WAR section will be excuted
     BEQ    DECLARE_WAR
-    CMP.B  #'5',D0
+    CMP.B  #'5',D0               ;if player inputs 5 it will compare it to the actaul program and then  TRADE_RESOURCES section will be excuted
     BEQ    TRADE_RESOURCES
-    CMP.B  #'6',D0
+    CMP.B  #'6',D0                              ;if player inputs 6 it will compare it to the actaul program and then  SAVE_EXIT section will be excuted
     BEQ    SAVE_EXIT
     
-    LEA    INVALID_MSG,A1
+    LEA    INVALID_MSG,A1        ; IF none of 1-6 values entered invalid msg outputting to ensure player inputs right value 
     BSR    PRINT_STRING
     BRA    GAME_LOOP
 
@@ -75,37 +79,37 @@ GET_INPUT:
     MOVE.B D1,D0                  ; Move the input character to D0 for comparison
     RTS                           ; Return to caller
 
-PRINT_STRING:
+PRINT_STRING: ; for printing strings trapping and interpret 
     MOVE.B #14,D0
     TRAP   #15
     RTS
 
-DISPLAY_STATS:
+DISPLAY_STATS: ;for buffering stats and saving them into memory such as gold, and resources and then displaying them
     LEA    STATS_BUFFER,A1
     LEA    TURN_LABEL,A2
     BSR    COPY_STRING
     MOVE.W TURN_COUNT,D0
     BSR    NUM_TO_STRING
     
-    MOVE.B #' ',(A1)+
+    MOVE.B #' ',(A1)+ ; stating gold
     LEA    GOLD_LABEL,A2
     BSR    COPY_STRING
     MOVE.W GOLD,D0
     BSR    NUM_TO_STRING
     
-    MOVE.B #' ',(A1)+
+    MOVE.B #' ',(A1)+ ;stating food
     LEA    FOOD_LABEL,A2
     BSR    COPY_STRING
     MOVE.W FOOD,D0
     BSR    NUM_TO_STRING
     
-    MOVE.B #' ',(A1)+
+    MOVE.B #' ',(A1)+ ; stating army 
     LEA    ARMY_LABEL,A2
     BSR    COPY_STRING
     MOVE.W ARMY,D0
     BSR    NUM_TO_STRING
     
-    MOVE.B #' ',(A1)+
+    MOVE.B #' ',(A1)+ ;stating happiness
     LEA    HAPPINESS_LABEL,A2
     BSR    COPY_STRING
     MOVE.W HAPPINESS,D0
@@ -155,10 +159,10 @@ ZERO_CASE:
 
 RANDOM_EVENT:
     MOVE.W RANDOM_SEED,D0
-    MULU   #13,D0
+    MULU   #13,D0 ; this section takes random number from 0-99 and then divide it by 7 
     ADD.W  #7,D0
     DIVU   #100,D0
-    SWAP   D0
+    SWAP   D0 ;swaps value in memory with one in register
     MOVE.W D0,RANDOM_SEED
     
     CMP.W  #60,D0
@@ -170,34 +174,35 @@ RANDOM_EVENT:
     CMP.W  #20,D0
     BGE    SNOWY_EVENT
     
-DROUGHT_EVENT:
+DROUGHT_EVENT:  ;drought event take food and happieness from a player 0-19
     SUB.W  #10,FOOD
     SUB.W  #5,HAPPINESS
     LEA    DROUGHT_MSG,A1
     BSR    PRINT_STRING
     BRA    EVENT_DONE
 
-SNOWY_EVENT:
-    SUB.W  #10,HAPPINESS
+SNOWY_EVENT: ;snowy event take army and happieness from a player 20-39
+
+    SUB.W  #10,HAPPINESS 
     SUB.W  #5,ARMY
     LEA    SNOWY_MSG,A1
     BSR    PRINT_STRING
     BRA    EVENT_DONE
 
-GOOD_DAY_EVENT:
+GOOD_DAY_EVENT: ;good day event gives gold and happieness to a player 40-59
     ADD.W  #15,GOLD
     ADD.W  #5,HAPPINESS
     LEA    GOOD_DAY_MSG,A1
     BSR    PRINT_STRING
     BRA    EVENT_DONE
 
-NO_EVENT:
+NO_EVENT: ; no event for bigger than or equal 60 
     RTS
 
 EVENT_DONE:
     RTS
 
-EXPAND_KINGDOM:
+EXPAND_KINGDOM: ;takes gold but gives resources 
     BSR    EXIT
     MOVE.W GOLD,D0
     CMP.W  #20,D0
@@ -209,7 +214,7 @@ EXPAND_KINGDOM:
     BSR    PRINT_STRING
     BRA    GAME_LOOP
 
-COLLECT_TAXES:
+COLLECT_TAXES: ; collecting taxes gives gold but takes happiness
     BSR    EXIT
     ADD.W  #15,GOLD
     SUB.W  #10,HAPPINESS
@@ -217,7 +222,7 @@ COLLECT_TAXES:
     BSR    PRINT_STRING
     BRA    GAME_LOOP
 
-TRAIN_ARMY:
+TRAIN_ARMY: ;trainging army takes gold and food 
     BSR    EXIT
     MOVE.W GOLD,D0
     CMP.W  #10,D0
@@ -246,13 +251,13 @@ DECLARE_WAR:
     MOVE.W D0,RANDOM_SEED     ; Update seed
     CMP.W  #50,D0             ; 50% chance (0-49 lose, 50-99 win)
     BGE    WAR_WIN
-WAR_LOSE:
+WAR_LOSE: ;randon lose takes 10 happiness
     BSR    EXIT
     SUB.W  #10,HAPPINESS
     LEA    BATTLE_LOSE,A1
     BSR    PRINT_STRING
     BRA    GAME_LOOP
-WAR_WIN:
+WAR_WIN: ;random win gives 20 gold , 5 happiness
     BSR    EXIT
     ADD.W  #20,GOLD
     ADD.W  #5,HAPPINESS
@@ -260,7 +265,7 @@ WAR_WIN:
     BSR    PRINT_STRING
     BRA    GAME_LOOP
 
-TRADE_RESOURCES:
+TRADE_RESOURCES: ;trading res takes food but adds gold
     BSR    EXIT
     MOVE.W FOOD,D0
     CMP.W  #15,D0
@@ -271,13 +276,13 @@ TRADE_RESOURCES:
     BSR    PRINT_STRING
     BRA    GAME_LOOP
 
-INSUFFICIENT:
+INSUFFICIENT: ; you can't trade or declare war 
     BSR    EXIT
     LEA    INSUFFICIENT_MSG,A1
     BSR    PRINT_STRING
     BRA    GAME_LOOP
 
-SAVE_EXIT:
+SAVE_EXIT: ;saving game and exit it 
     LEA    EXIT_MSG,A1
     BSR    PRINT_STRING
     BRA    EXIT
