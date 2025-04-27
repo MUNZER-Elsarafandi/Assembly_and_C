@@ -35,7 +35,6 @@ What’s in My Project Folder
 Here’s what I’ve got for you:
 
 sum-program.asm: My main x86_64 assembly program with all the cool updates and security fixes!
-test_plan.md: A list of test cases I used to make sure everything works (I still need to write this up, but I’ve got some ideas below!).
 test_script.c: A little C script to test the program automatically (I haven’t made this yet, it’s optional).
 demo_video.mp4: A short video of the program running (I’m planning to record this soon—I’ll show all my test cases!).
 
@@ -74,7 +73,7 @@ I’m gonna show this and more in my demo_video.mp4 soon!
 
 
 What I’ve Tested So Far
-I’m working on a test plan (test_plan.md), but here’s what I’ve tried already:
+I’ve tried a bunch of different things to make sure my program works great, and here’s what I found:
 
 Normal Numbers: I typed 1 and 1 for all 3 rounds, and it worked perfectly—sums were 2, 4, 6, and it stopped right after 3 rounds like it’s supposed to.
 Negative Numbers: I tried -5 and 3 for the first round, then 1 and 1 for the others. It added -5 + 3 to get -2, then added 1 + 1 to get 0, then 2, and the final sum was 2. So cool that it handles negatives now!
@@ -82,7 +81,7 @@ Zero and Empty Input: I just pressed Enter (empty input) for a number, and it sa
 Silly Input: I typed abc for a number, and it said “Invalid input! Using 0.” and kept going without crashing, which shows my buffer overflow fix is working awesome.
 Long Input: I typed a super long number (like 12345678901234567890) to test the buffer overflow protection, and it safely used 0 instead, keeping everything safe.
 
-I’ll write these up properly in the test plan soon, and I’ll show them in my demo video too!
+I’ll show all of these in my demo video too!
 What Was Super Hard
 
 Those Register Conflicts: Figuring out that rcx was causing my loop to go crazy was tough! Switching to r12 and fixing the buffer clearing made everything so much better.
@@ -102,4 +101,4 @@ When I Need to Finish This
 Deadline: April 28, 2025, 9:00 AM (no GitHub commits after this, eek!).
 Demo and Quiz: May 2, 2025, from 9:00 AM to 5:00 PM.
 
-I’m almost done—just need to record that demo video and write up the test plan, and I’ll be ready to submit! Thanks so much for checking out my project—you’re the best! 😊
+I’m almost done—just need to record that demo video, and I’ll be ready to submit! Thanks so much for checking out my project—you’re the best! 😊
